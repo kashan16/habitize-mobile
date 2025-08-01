@@ -1,14 +1,12 @@
 import { createClient, Session, User } from '@supabase/supabase-js';
-import Config from 'react-native-config';
 import { create } from 'zustand';
 import * as Linking from 'expo-linking';
 import Toast from 'react-native-toast-message';
-import { useNavigation } from '@react-navigation/native';
 
 
 const supabase = createClient(
-    Config.EXPO_PUBLIC_SUPABASE_URL!,
-    Config.EXPO_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.EXPO_PUBLIC_SUPABASE_URL!,
+    process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!
 );
 
 interface AuthState {
@@ -28,7 +26,6 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set , get) => {
-    const navigation = useNavigation();
     return ({
         user : null,
         session : null,
@@ -52,7 +49,6 @@ export const useAuthStore = create<AuthState>((set , get) => {
             }
             set({ user : data.user , session : data.session , loading : false });
             Toast.show({ type : 'success' , text1 : `Check ${email} for verification.` });
-            /* navigation.navigate('VerifyEmail'); */
         },
         signInWithGoogle : async () => {
             set({ loading : true , error : null });
